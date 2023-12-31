@@ -15,7 +15,7 @@ import (
 	"github.com/emejotaw/client-server-fullcycle-challenge/pkg/dto"
 )
 
-const HTTP_CLIENT_REQUEST_TIMEOUT_MS = 3000
+const HTTP_CLIENT_REQUEST_TIMEOUT_MS = 300
 
 func main() {
 

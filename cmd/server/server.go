@@ -19,7 +19,7 @@ type Server struct {
 }
 
 const DATABASE_TIMEOUT_MS = 10
-const HTTP_REQUEST_TIMEOUT_MS = 2000
+const HTTP_REQUEST_TIMEOUT_MS = 200
 
 func NewServer(db *gorm.DB) *Server {
 
