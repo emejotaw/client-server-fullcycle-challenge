@@ -9,5 +9,5 @@ go run cmd/server/server.go
 
 ### Rodar o cliente
 ```sh
-go run cmd/server/client.go
+go run cmd/client/client.go
 ```
