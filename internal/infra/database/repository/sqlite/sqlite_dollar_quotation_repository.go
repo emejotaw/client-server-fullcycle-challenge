@@ -18,8 +18,7 @@ func NewSqliteRepository(db *gorm.DB) *SqliteDollarQuotationRepository {
 
 func (r *SqliteDollarQuotationRepository) Create(dollarQuotation *entity.DollarQuotation, databaseTimeoutMs int) error {
 
-	ctx, cancel := context.WithTimeout(context.TODO(), time.Millisecond*time.Duration(databaseTimeoutMs))
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*time.Duration(databaseTimeoutMs))
 	defer cancel()
-	r.db.WithContext(ctx)
-	return r.db.Create(dollarQuotation).Error
+	return r.db.WithContext(ctx).Create(dollarQuotation).Error
 }
