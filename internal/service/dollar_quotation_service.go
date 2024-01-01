@@ -18,23 +18,22 @@ type DollarQuotationService struct {
 	repository repository.DollarQuotationRepository
 }
 
-func NewDollarQuotationService(db *gorm.DB) *DollarQuotationService {
+func NewDollarQuotationService(db *gorm.DB) (*DollarQuotationService, error) {
 
-	repository := sqlite.NewSqliteRepository(db)
+	databaseTimeoutMs, err := strconv.Atoi(os.Getenv(constants.DATABASE_TIMEOUT_MS_NAME))
+
+	if err != nil {
+		return nil, err
+	}
+	repository := sqlite.NewSqliteRepository(db, databaseTimeoutMs)
 	return &DollarQuotationService{
 		repository: repository,
-	}
+	}, nil
 }
 
 func (s *DollarQuotationService) Create(dollarQuotationDTO *dto.DollarQuotationDTO) error {
 
 	log.Printf("A new dollar quotation will be created with data: %v", dollarQuotationDTO)
-
-	databaseTimeoutMs, err := strconv.Atoi(os.Getenv(constants.DATABASE_TIMEOUT_MS_NAME))
-
-	if err != nil {
-		return err
-	}
 
 	dollarQuotation := &entity.DollarQuotation{
 		ID:         uuid.New().String(),
@@ -51,5 +50,5 @@ func (s *DollarQuotationService) Create(dollarQuotationDTO *dto.DollarQuotationD
 		CreateDate: dollarQuotationDTO.CreateDate,
 	}
 
-	return s.repository.Create(dollarQuotation, databaseTimeoutMs)
+	return s.repository.Create(dollarQuotation)
 }

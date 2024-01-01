@@ -9,16 +9,17 @@ import (
 )
 
 type SqliteDollarQuotationRepository struct {
-	db *gorm.DB
+	db                *gorm.DB
+	databaseTimeoutMs int
 }
 
-func NewSqliteRepository(db *gorm.DB) *SqliteDollarQuotationRepository {
-	return &SqliteDollarQuotationRepository{db: db}
+func NewSqliteRepository(db *gorm.DB, databaseTimeoutMs int) *SqliteDollarQuotationRepository {
+	return &SqliteDollarQuotationRepository{db: db, databaseTimeoutMs: databaseTimeoutMs}
 }
 
-func (r *SqliteDollarQuotationRepository) Create(dollarQuotation *entity.DollarQuotation, databaseTimeoutMs int) error {
+func (r *SqliteDollarQuotationRepository) Create(dollarQuotation *entity.DollarQuotation) error {
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*time.Duration(databaseTimeoutMs))
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*time.Duration(r.databaseTimeoutMs))
 	defer cancel()
 	return r.db.WithContext(ctx).Create(dollarQuotation).Error
 }

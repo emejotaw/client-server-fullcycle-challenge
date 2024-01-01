@@ -65,14 +65,22 @@ func (s *Server) GetDollarQuotation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := service.NewDollarQuotationService(s.db)
+	service, err := service.NewDollarQuotationService(s.db)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf("error generating service, error: %v", err.Error())))
+		return
+	}
+
 	err = service.Create(dollarQuotationDTO)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprintf("error saving dollar quotation, error: %v", err.Error())))
+		w.Write([]byte(fmt.Sprintf("could not create dollar quotation, error: %v", err.Error())))
 		return
 	}
+
 	encoder := json.NewEncoder(w)
 	encoder.Encode(dollarQuotationDTO)
 }
